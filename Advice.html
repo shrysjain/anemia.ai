@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anemia Result</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+    a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 2px solid #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    a:hover {
+      background-color: #fff;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>You Have <span id="anemiaPercentage"></span>% chance of Anemia</h1>
+    <a href="https://www.verywellhealth.com/treatments-for-iron-deficiency-anemia-3522500" target="_blank">Iron</a>
+    <a href="https://www.ucihealth.org/medical-services/blood-donations/hemoglobin" target="_blank">Hemoglobin</a>
+    <a href="https://www.health.com/nutrition/vitamin-b12-foods" target="_blank">Vitamin B12</a>
+  </div>
+
+  <script>
+    let imageValue = parseFloat(prompt("Please enter the image value:"));
+
+    let anemiaPercentage = imageValue * 100;
+
+    document.getElementById('anemiaPercentage').innerText = anemiaPercentage.toFixed(2);
+  </script>
+</body>
+</html>
+

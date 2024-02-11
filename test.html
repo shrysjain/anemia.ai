@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anemia Diagnosis</title>
+  <link rel="stylesheet" href="Fingers.css" />
+  <style>
+    .contact-button, .about-button, .algorithm-button, .instructions-button, .learn-more-button, .file-button, .interpretation-button {
+      background-color: #000; 
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .contact-button:hover, .about-button:hover, .algorithm-button:hover, .instructions-button:hover, .learn-more-button:hover, .file-button:hover, .interpretation-button:hover {
+      background-color: #333; 
+    }
+
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1; 
+      left: 0;
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0,0,0,0.4); 
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto; 
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%; 
+      border-radius: 8px;
+    }
+
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    #loading-bar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: #ddd;
+      z-index: 9999;
+    }
+
+    #loading-bar .progress {
+      width: 100%;
+      height: 100%;
+      background-color: #4caf50;
+      animation: progress-animation 10s linear forwards;
+    }
+
+    @keyframes progress-animation {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">Anemia.ai</div>
+    <div class="nav-items">
+      <button class="contact-button" onclick="showClinicNumbers()">Contact</button>
+      <button class="about-button" onclick="showAboutPopup()">About</button>
+      <button class="learn-more-button" onclick="goToMayoClinic()">Learn More</button>
+      <button class="algorithm-button" onclick="showAlgorithmInfo()">Algorithm</button>
+      <button class="interpretation-button" onclick="showInterpretation()">Diagnosis</button>
+    </div>
+    <div id="contactModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeContactModal()">&times;</span>
+        <h2>Contact Information</h2>
+        <ul>
+          <li><strong>Texas Medical Center:</strong> 713-791-8800</li>
+          <li><strong>Mayo Clinic:</strong> 877-858-0398</li>
+          <li><strong>Trinity Health:</strong> (877) 313-1191</li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <section class="hero">
+    <div class="hero-container">
+      <div class="column-left">
+        <h1>Upload Image</h1>
+        <p>
+          Upload your image below to get a medical diagnosis on anemia
+        </p>
+        <label for="avatar" class="file-button">Choose File</label>
+        <input class="button" type="file" id="avatar" name="avatar" accept="image/jpeg, image/png" style="display: none;"/>
+      </div>
+      <div class="column-right">
+        <img
+          src="https://s3.us-east-2.amazonaws.com/assets.tripment.com/uploads/post/image/41/large_694059346.jpg"
+          alt="illustration"
+          class="hero-image"
+        />
+      </div>
+    </div>
+  </section>
+
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Contact Information</h2>
+      <ul>
+        <li><strong>Texas Medical Center:</strong> 713-791-8800</li>
+        <li><strong>Mayo Clinic:</strong> 877-858-0398</li>
+        <li><strong>Trinity Health:</strong> (877) 313-1191</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAboutModal()">&times;</span>
+      <h2>About Anemia</h2>
+      <p>Anemia is a condition in which you lack enough healthy red blood cells to carry adequate oxygen to your body's tissues. The symptoms of anemia can vary depending on the cause and severity, but common symptoms include fatigue, weakness, shortness of breath, pale or yellowish skin, dizziness, and cold hands and feet.</p>
+    </div>
+  </div>
+
+  <div id="algorithmModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAlgorithmModal()">&times;</span>
+      <h2>Our Algorithm</h2>
+      <p>We use a highly accurate machine learning model that takes a dataset of the fingernails of Anemic and non-anemic humans. Our model then compares your nails to the norm and calculates an image value between 0 and 1.</p>
+    </div>
+  </div>
+
+  <div id="interpretationModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeInterpretationModal()">&times;</span>
+      <h2>Diagnosis</h2>
+      <p>You should not completely rely on this site to diagnose you with anemia. 30%- Most Likely Dont Have Anemia. Above 30%- Consult a Medical Professional. You can click the contact button for the phone numbers of three large medical clinics. You can also go to your doctor and check if you are anemic or not.</p>
+    </div>
+  </div>
+
+  <div id="loading-bar">
+    <div class="progress"></div>
+  </div>
+
+
+
+  <script>
+    var isImageValueEntered = false;
+    var uploadedImage = null;
+
+    function handleUpload() {
+      console.log("uploading");
+      var fileInput = document.getElementById('avatar');
+      var file = fileInput.files[0];
+
+      if (file) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          uploadedImage = e.target.result; 
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please select a file to upload.');
+      }
+    }
+
+    (async() => {
+      await uploadedImage;
+      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/shrysjain/anemia.ai/main/model.json');
+
+      let image = uploadedImage;
+
+      const data = {}
+      data.image = tf.browser.fromPixels(image);
+      data.resized = tf.image.resizeBilinear(data.image, [90, 90]);
+      data.expanded = tf.expandDims(data.resized, 0);
+
+      const prediction = await model.predict(data.expanded);
+
+      processImageValue(prediction);
+      isImageValueEntered = true;
+    });
+ 
+    function processImageValue(imageValue) {
+      document.getElementById('loading-bar').style.display = 'block';
+
+      setTimeout(function() {
+        document.getElementById('loading-bar').style.display = 'none';
+
+        if (imageValue <= 0.3) {
+          window.location.href = "No_Amenia.html";
+        } else {
+          window.location.href = "Advice.html";
+        }
+      }, 10000); 
+    }
+
+    document.getElementById('avatar').addEventListener('change', handleUpload);
+
+    function saveImageLocally() {
+      if (uploadedImage) {
+        var link = document.createElement('a');
+        link.href = uploadedImage;
+        link.download = 'uploaded_image.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        alert('Please upload an image first.');
+      }
+    }
+
+    function showClinicNumbers() {
+      var modal = document.getElementById('myModal');
+      modal.style.display = "block";
+    }
+
+    function closeModal() {
+      var modal = document.getElementById('myModal');
+      modal.style.display = "none";
+    }
+
+    function showAboutPopup() {
+      var aboutModal = document.getElementById('aboutModal');
+      aboutModal.style.display = "block";
+    }
+
+    function closeAboutModal() {
+      var aboutModal = document.getElementById('aboutModal');
+      aboutModal.style.display = "none";
+    }
+
+    function goToMayoClinic() {
+      window.open("https://www.mayoclinic.org/diseases-conditions/anemia/symptoms-causes/syc-20351360#:~:text=Overview,weakness%20and%20shortness%20of%20breath");
+    }
+
+    function showAlgorithmInfo() {
+      var algorithmModal = document.getElementById('algorithmModal');
+      algorithmModal.style.display = "block";
+    }
+
+    function closeAlgorithmModal() {
+      var algorithmModal = document.getElementById('algorithmModal');
+      algorithmModal.style.display = "none";
+    }
+
+    function closeContactModal() {
+      var contactModal = document.getElementById('contactModal');
+      contactModal.style.display = "none";
+    }
+
+    function showInterpretation() {
+      var interpretationModal = document.getElementById('interpretationModal');
+      interpretationModal.style.display = "block";
+    }
+
+    function closeInterpretationModal() {
+      var interpretationModal = document.getElementById('interpretationModal');
+      interpretationModal.style.display = "none";
+    }
+  </script>
+</body>
+</html>

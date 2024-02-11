@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You Most Likely Don't Have Anemia</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f7f7f7;
+    }
+    .container {
+      text-align: center;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      font-size: 3.5em;
+      color: #333;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    p {
+      font-size: 1.2em;
+      color: #666;
+      line-height: 1.6;
+    }
+    .heart {
+      color: #e74c3c;
+      font-size: 4em;
+    }
+    .btn {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="heart">&#10084;</span>
+    <h1>You Don't Have Anemia</h1>
+    <p>Congratulations! Your blood is most likely healthy and free from anemia.</p>
+    <div id="imageChanceDisplay"></div>
+    <button class="btn" onclick="preventAnemia()">Preventing Anemia</button>
+  </div>
+
+  <script>
+    let imageValue = parseFloat(prompt("Please enter the image value:"));
+
+    let chanceOfAnemia = imageValue * 100;
+
+    const imageChanceDisplay = document.getElementById('imageChanceDisplay');
+    imageChanceDisplay.innerHTML = `<p>You have a ${chanceOfAnemia.toFixed(2)}% chance of Anemia based on the image value.</p>`;
+
+    function preventAnemia() {
+      window.location.href = "https://newsinhealth.nih.gov/2014/01/avoiding-anemia";
+    }
+  </script>
+</body>
+</html>
